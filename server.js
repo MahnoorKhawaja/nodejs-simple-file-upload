@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const { BlobServiceClient } = require('@azure/storage-blob');
@@ -13,6 +12,13 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 app.post('/upload', upload.single('file'), async(req, res) => {
+    console.log('📥 Upload route called!');
+
+    if (!req.file) {
+        console.log('⚠️ No file received!');
+        return res.status(400).send('No file uploaded');
+    }
+
     try {
         const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
         const containerClient = blobServiceClient.getContainerClient(process.env.AZURE_CONTAINER_NAME);
@@ -24,15 +30,21 @@ app.post('/upload', upload.single('file'), async(req, res) => {
             blobHTTPHeaders: { blobContentType: req.file.mimetype }
         });
 
-        res.status(200).send(`✅ Uploaded "${req.file.originalname}" to Azure Blob`);
+        console.log(`✅ Uploaded "${req.file.originalname}" to Azure Blob`);
+        console.log('📂 Blob URL:', blockBlobClient.url);
+
+        res.status(200).json({
+            message: `✅ Uploaded "${req.file.originalname}" to Azure Blob`,
+            blobUrl: blockBlobClient.url
+        });
     } catch (err) {
-        console.error(err.message);
+        console.error('❌ Upload error:', err.message);
         res.status(500).send('❌ Upload to Azure Blob failed');
     }
 });
 
 app.get('/', (req, res) => {
-    res.send('Server is running');
+    res.send('🟢 Server is running');
 });
 
 app.listen(port, () => {
