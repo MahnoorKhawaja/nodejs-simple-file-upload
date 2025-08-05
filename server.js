@@ -15,9 +15,6 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Serve static files from the "public" folder (optional if you have CSS/JS)
-//app.use(express.static(path.join(__dirname, 'public')));
-
 // Multer setup
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
