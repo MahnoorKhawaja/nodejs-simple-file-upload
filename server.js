@@ -20,7 +20,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // ✅ Upload Endpoint
-app.post('/upload', upload.single('file'), async(req, res) => {
+app.post(['/upload', '/images/upload'], upload.single('file'), async(req, res) => {
     console.log('📥 Upload route called!');
 
     if (!req.file) {
