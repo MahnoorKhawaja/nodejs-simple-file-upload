@@ -47,9 +47,22 @@
     <div class="upload-box">
         <h2>Upload Your Files</h2>
         <form action="/upload" method="POST" enctype="multipart/form-data">
+            <!-- Dropdown menu for selecting container -->
+            <div class="mb-3">
+                <label for="container" class="form-label">Select Destination</label>
+                <select class="form-control" id="container" name="container" required>
+                    <option value="">-- Select --</option>
+                    <option value="images">Images</option>
+                    <option value="videos">Videos</option>
+                </select>
+            </div>
+
+            <!-- File input -->
             <div class="mb-3">
                 <input class="form-control" type="file" name="file" id="file" multiple>
             </div>
+
+            <!-- Submit button -->
             <button type="submit" class="btn btn-primary btn-upload">Upload</button>
         </form>
     </div>
