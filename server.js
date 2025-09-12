@@ -19,7 +19,7 @@ app.set('views', path.join(__dirname, 'views'));
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Azure Upload Endpoint
+// ✅ Upload Endpoint
 app.post('/upload', upload.single('file'), async(req, res) => {
     console.log('📥 Upload route called!');
 
@@ -49,12 +49,30 @@ app.post('/upload', upload.single('file'), async(req, res) => {
     }
 });
 
-// Render Upload Page
+// ✅ Render Upload Page
 app.get('/', (req, res) => {
     res.render('index', { message: null, blobUrl: null });
 });
 
-// Start server
+// ✅ NEW: List all images
+app.get('/images', async(req, res) => {
+    try {
+        const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
+        const containerClient = blobServiceClient.getContainerClient(process.env.AZURE_CONTAINER_NAME);
+
+        let imageUrls = [];
+        for await (const blob of containerClient.listBlobsFlat()) {
+            imageUrls.push(containerClient.getBlockBlobClient(blob.name).url);
+        }
+
+        res.json(imageUrls); // 👉 returns JSON list of image URLs
+    } catch (err) {
+        console.error('❌ Error listing images:', err.message);
+        res.status(500).send('❌ Failed to fetch images');
+    }
+});
+
+// ✅ Start server
 app.listen(port, () => {
     console.log(`🚀 Server started at http://localhost:${port}`);
 });
