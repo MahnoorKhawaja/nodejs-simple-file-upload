@@ -10,7 +10,14 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(helmet());
+app.use(helmet.crossOriginEmbedderPolicy({ policy: "credentialless" }));
+app.use(
+    helmet({
+        crossOriginEmbedderPolicy: false,
+        originAgentCluster: true
+    })
+);
 // Set view engine to EJS and views directory
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
