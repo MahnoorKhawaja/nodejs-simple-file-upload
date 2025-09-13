@@ -46,7 +46,7 @@
 
     <div class="upload-box">
         <h2>Upload Your Files</h2>
-        <form action="/upload" method="POST" enctype="multipart/form-data">
+        <form id="uploadForm" method="POST" enctype="multipart/form-data">
             <!-- Dropdown menu for selecting container -->
             <div class="mb-3">
                 <label for="container" class="form-label">Select Destination</label>
@@ -72,6 +72,17 @@
         window.onload = () => {
             document.getElementById("file").value = "";
         };
+
+        // Dynamically change action URL based on dropdown selection
+        document.getElementById("uploadForm").addEventListener("submit", function(e) {
+            const container = document.getElementById("container").value;
+            if (!container) {
+                e.preventDefault();
+                alert("Please select Images or Videos");
+                return;
+            }
+            this.action = "/" + container + "/upload";
+        });
     </script>
 
 </body>
