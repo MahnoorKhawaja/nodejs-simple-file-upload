@@ -3,21 +3,10 @@ const multer = require('multer');
 const { BlobServiceClient } = require('@azure/storage-blob');
 const cors = require('cors');
 const path = require('path');
-const helmet = require("helmet");
+
 const app = express();
 const port = process.env.PORT || 3000;
-app.use(
-    helmet.contentSecurityPolicy({
-        directives: {
-            defaultSrc: ["'self'"],
-            imgSrc: ["'self'", "https:", "data:"],
-            mediaSrc: ["'self'", "https:", "data:"],
-            scriptSrc: ["'self'", "https:"],
-            styleSrc: ["'self'", "'unsafe-inline'", "https:"],
-            connectSrc: ["'self'", "https:"],
-        },
-    })
-);
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
