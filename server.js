@@ -49,12 +49,18 @@ app.post(['/upload', '/images/upload'], upload.single('file'), async(req, res) =
     }
 });
 
-// ✅ Render Upload Page
+// ✅ Root route (for health probe + default page)
 app.get('/', (req, res) => {
-    res.render('index', { message: null, blobUrl: null });
+    // Always returns 200 OK (Health Probe will pass)
+    res.status(200).render('index', { message: null, blobUrl: null });
 });
 
-// ✅ NEW: List all images
+// ✅ Health-only route (optional, sometimes clearer)
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
+// ✅ List all images
 app.get('/images', async(req, res) => {
     try {
         const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
